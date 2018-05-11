@@ -7,6 +7,7 @@ import Spinner from "../../components/UI/Spinner/Spinner";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 import axios from "../../axios-orders";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
+import { Route, Switch } from "react-router-dom";
 
 const INGREDIENT_PRICES = {
   salad: 0.5,
@@ -57,37 +58,53 @@ class BurgerBuilder extends Component {
   };
   purchaseContinueHandler = () => {
     // alert("Done");
-    this.setState({
-      loading: true
+    // this.setState({
+    //   loading: true
+    // });
+    // const order = {
+    //   ingredients: this.state.ingredients,
+    //   price: this.state.totalPrice,
+    //   customer: {
+    //     name: "Max",
+    //     address: {
+    //       street: "test",
+    //       zipCode: 41352,
+    //       country: "India"
+    //     },
+    //     email: "test@test.com"
+    //   },
+    //   deliveryMethod: "fastest"
+    // };
+    // axios
+    //   .post("/orders.json", order)
+    //   .then(res => {
+    //     this.setState({
+    //       loading: false,
+    //       purchasing: false
+    //     });
+    //   })
+    //   .catch(err => {
+    //     this.setState({
+    //       loading: false,
+    //       purchasing: false
+    //     });
+    //   });
+
+    // this.props.history.push("/checkout");
+
+    let queryParams = [];
+    for (let i in this.state.ingredients) {
+      queryParams.push(
+        encodeURIComponent(i) +
+          "=" +
+          encodeURIComponent(this.state.ingredients[i])
+      );
+    }
+    let queryString = queryParams.join("&");
+    this.props.history.push({
+      pathname: "/checkout",
+      search: "?" + queryString
     });
-    const order = {
-      ingredients: this.state.ingredients,
-      price: this.state.totalPrice,
-      customer: {
-        name: "Max",
-        address: {
-          street: "test",
-          zipCode: 41352,
-          country: "India"
-        },
-        email: "test@test.com"
-      },
-      deliveryMethod: "fastest"
-    };
-    axios
-      .post("/orders.json", order)
-      .then(res => {
-        this.setState({
-          loading: false,
-          purchasing: false
-        });
-      })
-      .catch(err => {
-        this.setState({
-          loading: false,
-          purchasing: false
-        });
-      });
   };
   addIngredientHandler = type => {
     const oldCount = this.state.ingredients[type];
